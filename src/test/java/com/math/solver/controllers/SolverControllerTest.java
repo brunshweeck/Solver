@@ -1,6 +1,7 @@
 package com.math.solver.controllers;
 
 import io.restassured.RestAssured;
+import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Locale;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -26,38 +28,51 @@ class SolverControllerTest {
 
     @Test
     public void divideFiniteStrictlyPositiveByZeroTest() {
-        RestAssured.given().when().get("/solve?lhs=99.0&rhs=0.0").then().statusCode(200)
-                .body(Matchers.equalTo("Infinity"));
+        Assertions.assertThat(
+                RestAssured.given().when().get("/solve?lhs=99.0&rhs=0.0").then().statusCode(200)
+                        .extract().as(Double.class)
+        ).isEqualTo(Double.POSITIVE_INFINITY);
     }
 
     @Test
     public void divideFiniteStrictlyNegativeByZeroTest() {
-        RestAssured.given().when().get("/solve?lhs=-99.0&rhs=0.0").then().statusCode(200)
-                .body(Matchers.equalTo("-Infinity"));
+        Assertions.assertThat(
+                RestAssured.given().when().get("/solve?lhs=-99.0&rhs=0.0").then().statusCode(200)
+                        .extract().as(Double.class)
+        ).isEqualTo(Double.NEGATIVE_INFINITY);
     }
 
     @Test
     public void dividePositiveInfinityByZeroTest() {
-        RestAssured.given().when().get("/solve?lhs=Infinity&rhs=0.0").then().statusCode(200)
-                .body(Matchers.equalTo("Infinity"));
+        Assertions.assertThat(
+                RestAssured.given().when().get("/solve?lhs=Infinity&rhs=0.0").then().statusCode(200)
+                        .extract().as(Double.class)
+        ).isEqualTo(Double.POSITIVE_INFINITY);
+
     }
 
     @Test
     public void divideNegativeInfinityByZeroTest() {
-        RestAssured.given().when().get("/solve?lhs=-Infinity&rhs=0.0").then().statusCode(200)
-                .body(Matchers.equalTo("-Infinity"));
+        Assertions.assertThat(
+                RestAssured.given().when().get("/solve?lhs=-Infinity&rhs=0.0").then().statusCode(200)
+                        .extract().as(Double.class)
+        ).isEqualTo(Double.NEGATIVE_INFINITY);
     }
 
     @Test
     public void divideNaNByZeroTest() {
-        RestAssured.given().when().get("/solve?lhs=NaN&rhs=0.0").then().statusCode(200)
-                .body(Matchers.equalTo("NaN"));
+        Assertions.assertThat(
+                RestAssured.given().when().get("/solve?lhs=NaN&rhs=0.0").then().statusCode(200)
+                        .extract().as(Double.class)
+        ).isNaN();
     }
 
     @Test
     public void divideZeroByZeroTest() {
-        RestAssured.given().when().get("/solve?lhs=0.0&rhs=0.0").then().statusCode(200)
-                .body(Matchers.equalTo("NaN"));
+        Assertions.assertThat(
+                RestAssured.given().when().get("/solve?lhs=0.0&rhs=0.0").then().statusCode(200)
+                        .extract().as(Double.class)
+        ).isNaN();
     }
 
     @Test

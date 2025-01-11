@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SolverController {
 
     @GetMapping(path = "/solve")
-    public double solve(@RequestParam(name = "lhs", defaultValue = "0.0") double a, @RequestParam(name = "rhs", defaultValue = "0.0") double b) {
+    public Double solve(@RequestParam(name = "lhs", defaultValue = "0.0") Double a, @RequestParam(name = "rhs", defaultValue = "0.0") Double b) {
         return a / b;
     }
 }
